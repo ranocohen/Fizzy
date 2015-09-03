@@ -8,12 +8,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.kilr.fizzy.R;
 import com.kilr.fizzy.messaging.MessageItemTouchHelperCallback;
 import com.kilr.fizzy.messaging.MessagesRecyclerListAdapter;
+
+import timber.log.Timber;
 
 /**
  * Created by rancohen on 8/18/15.
@@ -36,7 +39,13 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Timber.i("recylcled");
+                return false;
+            }
+        });
       /*  ItemTouchHelper.Callback callback = new MessageItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);*/
