@@ -172,8 +172,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void saveInParse(ParseUser user,ParseInstallation installation) {
         user.setEmail("idanakav@gmail.com");
-        installation = ParseInstallation.getCurrentInstallation();
-        installation.put("User",ParseUser.getCurrentUser());
+        user.put("installation",installation);
         ParseInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

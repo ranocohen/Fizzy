@@ -19,7 +19,7 @@
 
     <permission android:protectionLevel="signature"
         android:name="com.kilr.fizzy.permission.C2D_MESSAGE" />
-    <uses-permission android:name="ccom.kilr.fizzy.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.kilr.fizzy.permission.C2D_MESSAGE" />
 
     <!-- Maps API needs OpenGL ES 2.0. -->
     <uses-feature

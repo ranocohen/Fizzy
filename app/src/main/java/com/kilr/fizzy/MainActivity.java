@@ -4,14 +4,12 @@ import android.app.Dialog;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -21,22 +19,20 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
 import com.kilr.fizzy.models.Message;
 import com.parse.FindCallback;
-import com.parse.FunctionCallback;
-import com.parse.GetCallback;
-import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.HashMap;
 import java.util.List;
 
 import timber.log.Timber;
@@ -49,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public static String TAG = MainActivity.class.toString();
 
-    private final static int radius = 5;
+    private final static int radius = 50;
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     /*
@@ -95,13 +91,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private AppBarLayout mAppBarLayout;
     LatLng centerDummy = new LatLng(32.066158, 34.777819);
 
-    //MAP
-    MapFragment mapFragment;
     private LocationRequest locationRequest; // A request to connect to Location Services
     private GoogleApiClient locationClient; // Stores the current instantiation of the location client in this object
     private Location lastLocation;
     private Location currentLocation;
     private boolean hasSetUpInitialLocation;
+    private GoogleMap map;
+    private MapView mapView;
 
 
     @Override
@@ -142,30 +138,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .commit();
         }
 
-        mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
 
-        // Add this line
-        mapFragment.getMap().setMyLocationEnabled(true);
-        mapFragment.getMap().setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-            @Override
-            public boolean onMyLocationButtonClick() {
-                return false;
-            }
-        });
-
-        CameraUpdate center = CameraUpdateFactory.newLatLng(centerDummy);
-        mapFragment.getMap().moveCamera(center);
-
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
-        mapFragment.getMap().animateCamera(zoom);
-
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+        mapView.getMap().animateCamera(zoom);
 
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        this.map = googleMap;
         fetchNearMessages();
 
     }
@@ -178,8 +162,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         query.findInBackground(new FindCallback<Message>() {
             public void done(List<Message> messages, ParseException e) {
                 if (e == null) {
-                    for(Message msg : messages) {
-                        Timber.i(msg.getBody());
+                    for (Message msg : messages) {
+                        map.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory
+                                        .fromResource(R.drawable.ic_chat_bubble))
+                                .position(new LatLng(msg.getLocation().getLatitude(), msg.getLocation().getLongitude()))
+                                .title(msg.getBody()));
                     }
                 } else {
 
@@ -194,7 +182,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //TODO animate current location while map changes
         Log.d(TAG, String.valueOf(i));
         if(i == 0) {
-            
+            mapView.requestFocus();
+
         }
     }
 
@@ -213,7 +202,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         if (!hasSetUpInitialLocation) {
             // Zoom to the current location.
-            updateZoom(myLatLng);
+            LatLng latlng = new LatLng(location.getLatitude(),location.getLongitude());
+            LatLngBounds bounds = LatLngBounds.builder().include(latlng).build();
+            mapView.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 5));
+
             hasSetUpInitialLocation = true;
         }
         // Update map radius indicator
@@ -275,16 +267,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
     }
 
-    private void updateZoom(LatLng myLatLng) {
+    /*private void updateZoom(LatLng myLatLng) {
         // Get the bounds to zoom to
         LatLngBounds bounds = calculateBoundsWithCenter(myLatLng);
         // Zoom to the given bounds
         mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 5));
-    }
+    }*/
 
-    /*
+  /*  *//*
  * Helper method to calculate the bounds for map zooming
- */
+ *//*
     LatLngBounds calculateBoundsWithCenter(LatLng myLatLng) {
         // Create a bounds
         LatLngBounds.Builder builder = LatLngBounds.builder();
@@ -350,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         } while (Math.abs(distance[0] - desiredOffsetInMeters) > OFFSET_CALCULATION_ACCURACY);
         return latLngOffset;
-    }
+    }*/
 
     private void updateCircle(LatLng myLatLng) {
         //TODO update marker
@@ -393,4 +385,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 locationClient, locationRequest, this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
 }

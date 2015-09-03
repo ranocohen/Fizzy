@@ -37,9 +37,9 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        ItemTouchHelper.Callback callback = new MessageItemTouchHelperCallback(adapter);
+      /*  ItemTouchHelper.Callback callback = new MessageItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);*/
         adapter.notifyDataSetChanged();
         return v;
     }
