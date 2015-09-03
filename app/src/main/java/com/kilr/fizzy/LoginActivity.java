@@ -12,8 +12,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
 import com.facebook.login.LoginManager;
 import com.facebook.GraphResponse;
+import com.kilr.fizzy.models.Friend;
 import com.parse.FunctionCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
@@ -83,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (e != null) {
                     Timber.e(e.getMessage());
                 } else if (o != null) {
-                    Toast.makeText(LoginActivity.this,o.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, o.toString(), Toast.LENGTH_SHORT).show();
                 }
 
                 if (o == null) {
@@ -170,6 +172,12 @@ public class LoginActivity extends AppCompatActivity {
                     JSONArray data = request.getJSONArray("data");
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject user = data.getJSONObject(i);
+                        String imageUrl = user.getJSONObject("picture").getJSONObject("data").getString("url");
+                        String userId = data.getJSONObject(i).getString("id");
+                        String userName = data.getJSONObject(i).getString("name");
+                        Friend friend = new Friend(userName, userId, imageUrl);
+                        FriendsList fl = FriendsList.getInstance();
+                        fl.addFriend(friend);
                     }
 
                 } catch (JSONException e) {
@@ -180,14 +188,21 @@ public class LoginActivity extends AppCompatActivity {
 
         requesttest.executeAsync();
 
-
-
-        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+        GraphRequest request = GraphRequest.newMyFriendsRequest(accessToken, new GraphRequest.GraphJSONArrayCallback() {
             @Override
-            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-
+            public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
+                graphResponse.getRequest();
             }
         });
+
+        request.executeAsync();
+
+//        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+//            @Override
+//            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+//
+//            }
+//        });
 
     }
 
