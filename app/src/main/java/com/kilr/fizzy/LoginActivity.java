@@ -16,6 +16,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.parse.FunctionCallback;
 import com.parse.LogInCallback;
+import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -25,6 +26,8 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -107,11 +110,12 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginClick(View v) {
         progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
-        List<String> permissions = Arrays.asList("public_profile", "email");
+        List<String> permissions = Arrays.asList("public_profile", "email", "user_friends");
         // NOTE: for extended permissions, like "user_about_me", your app must be reviewed by the Facebook team
         // (https://developers.facebook.com/docs/facebook-login/permissions/)
 
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
+
             @Override
             public void done(ParseUser user, ParseException err) {
                 progressDialog.dismiss();
@@ -122,11 +126,13 @@ public class LoginActivity extends AppCompatActivity {
                     saveInParse(user, ParseInstallation.getCurrentInstallation());
                     showMainActivity();
                     AccessToken.getCurrentAccessToken();
+                    getFriendsList(AccessToken.getCurrentAccessToken());
                 } else {
                     saveInParse(user, ParseInstallation.getCurrentInstallation());
                     Log.d(TAG, "User logged in through Facebook!");
                     showMainActivity();
                     AccessToken.getCurrentAccessToken();
+                    getFriendsList(AccessToken.getCurrentAccessToken());
                 }
             }
         });
@@ -134,20 +140,36 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-//    public void getInfo(ParseUser user, AccessToken accessToken) {
-//
-//
-//        GraphRequest request = GraphRequest.newMeRequest(
-//                user.getSessionToken(),
-//                new GraphRequest.GraphJSONObjectCallback() {
-//                    @Override
-//                    public void onCompleted(
-//                            JSONObject object,
-//                            GraphResponse response) {
-//                        // Application code
-//                    }
-//                });
-//    }
+    public void getFriendsList(AccessToken accessToken) {
+
+        GraphRequest requesttest = GraphRequest.newGraphPathRequest(accessToken, "/me/taggable_friends", new GraphRequest.Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+                JSONObject request = graphResponse.getJSONObject();
+                try {
+                    JSONArray data = request.getJSONArray("data");
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject user = data.getJSONObject(i);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        requesttest.executeAsync();
+
+
+
+        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+
+            }
+        });
+
+    }
 
 
     public void saveInParse(ParseUser user,ParseInstallation installation) {
