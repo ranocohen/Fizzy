@@ -21,6 +21,7 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
     private Context mCon;
     public MessagesRecyclerListAdapter(Context context) {
         this.mCon = context;
+
         String[] names = new String[] {"Idan" ,"Lidan","Ken","Ran"};
         Random random = new Random();
         for(int i =0 ;i<50;i++) {
