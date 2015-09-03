@@ -1,12 +1,14 @@
 package com.kilr.fizzy;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap map;
     private MapView mapView;
     private CoordinatorLayout coordinatorLayout;
-
+    private FloatingActionButton mFab;
     private ArrayList<Message> mMessages = new ArrayList();
 
     FrameLayout test;
@@ -170,6 +172,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
         mapView.getMap().animateCamera(zoom);
 
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,SendMessageActivity.class));
+            }
         mapView.getMap().getUiSettings().setScrollGesturesEnabled(false);
         mapView.getMap().getUiSettings().setCompassEnabled(false);
         mapView.getMap().getUiSettings().setZoomControlsEnabled(true);
@@ -177,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView.getMapAsync(this);
 
 
+        });
     }
 
     @Override

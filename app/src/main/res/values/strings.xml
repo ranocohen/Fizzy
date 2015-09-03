@@ -10,4 +10,5 @@
     <string name="enter_body">Enter body</string>
     <string name="welcome">Welcome to Fizzy</string>
     <string name="is_hanzir">is hazir</string>
+    <string name="title_activity_send_message">SendMessageActivity</string>
 </resources>

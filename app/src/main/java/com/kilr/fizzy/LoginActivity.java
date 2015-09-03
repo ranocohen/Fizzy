@@ -162,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void getFriendsList(AccessToken accessToken) {
-
+/*
         GraphRequest requesttest = GraphRequest.newGraphPathRequest(accessToken, "/me/taggable_friends", new GraphRequest.Callback() {
             @Override
             public void onCompleted(GraphResponse graphResponse) {
@@ -183,9 +183,9 @@ public class LoginActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
-        requesttest.executeAsync();
+     //   requesttest.executeAsync();
 
         GraphRequest request = GraphRequest.newMyFriendsRequest(accessToken, new GraphRequest.GraphJSONArrayCallback() {
             @Override
