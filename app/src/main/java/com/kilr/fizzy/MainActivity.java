@@ -35,11 +35,15 @@ import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
 import com.kilr.fizzy.messaging.MessagesRecyclerListAdapter;
 import com.kilr.fizzy.models.Message;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import timber.log.Timber;
@@ -141,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .build();
         locationClient.connect();
 
+
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.main_appbar);
 
@@ -210,9 +216,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
         //TODO animate current location while map changes
 
-        if(i == 0) {
-
-        }
     }
 
     @Override
@@ -244,11 +247,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onConnected(Bundle bundle) {
         currentLocation = getLocation();
+        ParseGeoPoint parseGeoPoint = new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude());
+        ParseUser.getCurrentUser().put("last_known_location",parseGeoPoint);
+
         startPeriodicUpdates();
 
-      /*  HashMap<String,Object> map = new HashMap<>();
-        map.put("body","Hello Ken");
-        map.put("location", new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude()));
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("body","Hello Kenlkasdj");
+        map.put("location", parseGeoPoint);
         ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
             @Override
             public void done(Object o, ParseException e) {
@@ -262,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Timber.i("NULL SHIT");
                 }
             }
-        });*/
+        });
 
     }
 

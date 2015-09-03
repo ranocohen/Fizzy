@@ -13,8 +13,10 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.GraphResponse;
+import com.google.android.gms.appdatasearch.GetRecentContextCall;
 import com.kilr.fizzy.models.Friend;
 import com.parse.FunctionCallback;
 import com.parse.LogInCallback;
@@ -97,27 +99,22 @@ public class LoginActivity extends AppCompatActivity {
 
     private void sendMsg() {
 
-/*                if (e != null) {
+
+
+          /*  HashMap<String,Object> map = new HashMap<>();
+        map.put("body","Hello Ken");
+        map.put("location", new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude()));
+        ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
+            @Override
+            public void done(Object o, ParseException e) {
+                if (e != null) {
                     Timber.e(e.getMessage());
                 } else if (o != null) {
                     Timber.i(o.toString());
-                }*/
+                }
 
-/*        ParseObject msg = new ParseObject("Messages");
-        ParseGeoPoint geoPoint = new ParseGeoPoint(51.5033630,-0.1276250);
-        msg.put("body",edit.getText().toString());
-        msg.put("location",geoPoint);
-        msg.put("from",ParseUser.getCurrentUser());
-        msg.put("isPublic",true);
-        msg.put("viewed",false);
-        msg.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(LoginActivity.this, "sent", Toast.LENGTH_SHORT).show();
-
+                if (o == null) {
+                    Timber.i("NULL SHIT");
                 }
             }
         });*/
@@ -136,6 +133,8 @@ public class LoginActivity extends AppCompatActivity {
         // NOTE: for extended permissions, like "user_about_me", your app must be reviewed by the Facebook team
         // (https://developers.facebook.com/docs/facebook-login/permissions/)
 
+
+
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
 
             @Override
@@ -145,12 +144,12 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
                     Log.d(TAG, "User signed up and logged in through Facebook!");
-                    saveInParse(user, ParseInstallation.getCurrentInstallation());
+                    saveInParse(AccessToken.getCurrentAccessToken(), user, ParseInstallation.getCurrentInstallation());
                     showMainActivity();
                     AccessToken.getCurrentAccessToken();
                     getFriendsList(AccessToken.getCurrentAccessToken());
                 } else {
-                    saveInParse(user, ParseInstallation.getCurrentInstallation());
+                    saveInParse(AccessToken.getCurrentAccessToken(),user, ParseInstallation.getCurrentInstallation());
                     Log.d(TAG, "User logged in through Facebook!");
                     showMainActivity();
                     AccessToken.getCurrentAccessToken();
@@ -207,21 +206,39 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void saveInParse(ParseUser user,ParseInstallation installation) {
-        user.setEmail("idanakav@gmail.com");
-        user.put("installation",installation);
-        ParseInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Timber.e(e.getMessage());
-                } else {
-                    Timber.i("Sent!");
+    public void saveInParse(AccessToken token,final ParseUser user, final ParseInstallation installation) {
 
-                }
-            }
-        });
-        user.saveInBackground();
+
+        GraphRequest request = GraphRequest.newMeRequest(token
+                ,
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        String email = object.optString("email");
+                        Timber.i("got email %s",email);
+                        user.put("email", email);
+                        user.put("fbUserId", Profile.getCurrentProfile().getId());
+                        user.put("installation",installation);
+                        ParseInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e != null) {
+                                    Timber.e(e.getMessage());
+                                } else {
+                                    Timber.i("Sent!");
+
+                                }
+                            }
+                        });
+                        user.saveInBackground();
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "email");
+        request.setParameters(parameters);
+        request.executeAsync();
+
+
     }
 
     private void showMainActivity() {

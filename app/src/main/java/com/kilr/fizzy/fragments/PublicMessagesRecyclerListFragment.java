@@ -26,8 +26,6 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
 
     private ItemTouchHelper mItemTouchHelper;
 
-    public MessagesRecyclerListAdapter adapter;
-
     public PublicMessagesRecyclerListFragment() {
 
     }
@@ -36,6 +34,7 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_public_messages,container,false);
+
 
         adapter = new MessagesRecyclerListAdapter(getActivity(), ((MainActivity)getActivity()).getmMessages());
 
