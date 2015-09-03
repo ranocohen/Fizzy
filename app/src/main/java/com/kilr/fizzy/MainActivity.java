@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
+import android.widget.FrameLayout;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -102,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MapView mapView;
     private CoordinatorLayout coordinatorLayout;
 
+    FrameLayout test;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,41 +148,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
-        mapView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Timber.i(String.format("map touched at %f %f", event.getX(), event.getY()));
-                return false;
-            }
-        });
-        mapView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                Timber.i(String.format("map scrolled at %d %d", scrollX, scrollY));
-
-            }
-        });
+        mapView.setClickable(false);
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
-        coordinatorLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Timber.i(String.format("coordinator touched at %f %f", event.getX(), event.getY()));
-                return false;
-            }
-        });
-
-        mAppBarLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Timber.i(String.format("appbar touched at %f %f", event.getX(), event.getY()));
-                return false;
-            }
-        });
-
-        mapView.requestDisallowInterceptTouchEvent(true);
-        coordinatorLayout.setClickable(false);
 
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
         mapView.getMap().animateCamera(zoom);
@@ -217,21 +190,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
         //TODO animate current location while map changes
-    //        Log.d(TAG, String.valueOf(i));
+
         if(i == 0) {
-            mapView.requestFocus();
-            coordinatorLayout.setClickable(false);
-            coordinatorLayout.requestDisallowInterceptTouchEvent(true);
-        } else {
-            coordinatorLayout.setClickable(true);
-            coordinatorLayout.requestDisallowInterceptTouchEvent(false);
 
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-
 
         currentLocation = location;
         if (lastLocation != null
