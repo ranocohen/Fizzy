@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.0"
 
     packagingOptions {
-        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICtel ENSE'
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/NOTICE'
     }
