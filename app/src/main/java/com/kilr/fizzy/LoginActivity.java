@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.parse.FunctionCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseCloud;
@@ -21,6 +24,8 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -65,11 +70,11 @@ public class LoginActivity extends AppCompatActivity {
         ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
             @Override
             public void done(Object o, ParseException e) {
-               if(e != null) {
-                   Timber.e(e.getMessage());
-               } else if(o != null) {
-                   Timber.i(o.toString());
-               }
+                if (e != null) {
+                    Timber.e(e.getMessage());
+                } else if (o != null) {
+                    Timber.i(o.toString());
+                }
             }
         });
 
@@ -116,15 +121,33 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "User signed up and logged in through Facebook!");
                     saveInParse(user, ParseInstallation.getCurrentInstallation());
                     showMainActivity();
+                    AccessToken.getCurrentAccessToken();
                 } else {
-                    saveInParse(user,ParseInstallation.getCurrentInstallation());
+                    saveInParse(user, ParseInstallation.getCurrentInstallation());
                     Log.d(TAG, "User logged in through Facebook!");
-
                     showMainActivity();
+                    AccessToken.getCurrentAccessToken();
                 }
             }
         });
+
+
     }
+
+//    public void getInfo(ParseUser user, AccessToken accessToken) {
+//
+//
+//        GraphRequest request = GraphRequest.newMeRequest(
+//                user.getSessionToken(),
+//                new GraphRequest.GraphJSONObjectCallback() {
+//                    @Override
+//                    public void onCompleted(
+//                            JSONObject object,
+//                            GraphResponse response) {
+//                        // Application code
+//                    }
+//                });
+//    }
 
 
     public void saveInParse(ParseUser user,ParseInstallation installation) {
