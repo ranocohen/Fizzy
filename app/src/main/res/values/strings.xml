@@ -8,4 +8,6 @@
     <string name="action_settings">Settings</string>
     <string name="activity_login">Welcome to Fizzy</string>
     <string name="enter_body">Enter body</string>
+    <string name="welcome">Welcome to Fizzy</string>
+    <string name="is_hanzir">is hazir</string>
 </resources>
