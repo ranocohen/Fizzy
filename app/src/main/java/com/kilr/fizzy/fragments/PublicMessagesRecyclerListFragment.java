@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.kilr.fizzy.MainActivity;
 import com.kilr.fizzy.R;
 import com.kilr.fizzy.messaging.MessageItemTouchHelperCallback;
 import com.kilr.fizzy.messaging.MessagesRecyclerListAdapter;
@@ -25,7 +26,10 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
 
     private ItemTouchHelper mItemTouchHelper;
 
+    public MessagesRecyclerListAdapter adapter;
+
     public PublicMessagesRecyclerListFragment() {
+
     }
 
     @Nullable
@@ -33,7 +37,7 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_public_messages,container,false);
 
-        MessagesRecyclerListAdapter adapter = new MessagesRecyclerListAdapter(getActivity());
+        adapter = new MessagesRecyclerListAdapter(getActivity(), ((MainActivity)getActivity()).getmMessages());
 
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -52,6 +56,16 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
         adapter.notifyDataSetChanged();
         return v;
     }
+
+    public MessagesRecyclerListAdapter getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(MessagesRecyclerListAdapter adapter) {
+        this.adapter = adapter;
+        this.adapter.notifyDataSetChanged();
+    }
+
 
 
 }

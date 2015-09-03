@@ -32,12 +32,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
+import com.kilr.fizzy.messaging.MessagesRecyclerListAdapter;
 import com.kilr.fizzy.models.Message;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static String TAG = MainActivity.class.toString();
 
     private final static int radius = 50;
+
+    private static String MESSAGE_FRAGMENT = "message_fragment";
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     /*
@@ -105,8 +109,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MapView mapView;
     private CoordinatorLayout coordinatorLayout;
 
+    private ArrayList<Message> mMessages = new ArrayList();
+
     FrameLayout test;
 
+    public ArrayList<Message> getmMessages() {
+        return mMessages;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (savedInstanceState == null) {
             PublicMessagesRecyclerListFragment fragment = new PublicMessagesRecyclerListFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content, fragment)
+                    .add(R.id.content, fragment, MESSAGE_FRAGMENT)
                     .commit();
         }
 
@@ -155,13 +164,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
         mapView.getMap().animateCamera(zoom);
 
+        mapView.getMap().getUiSettings().setScrollGesturesEnabled(false);
+        mapView.getMap().getUiSettings().setCompassEnabled(false);
+        mapView.getMap().getUiSettings().setZoomControlsEnabled(true);
+
+
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
         fetchNearMessages();
-
     }
 
     private void fetchNearMessages() {
@@ -178,7 +192,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         .fromResource(R.drawable.ic_chat_bubble))
                                 .position(new LatLng(msg.getLocation().getLatitude(), msg.getLocation().getLongitude()))
                                 .title(msg.getBody()));
+                        mMessages.add(msg);
                     }
+
+                    //TODO update adapter
+                    PublicMessagesRecyclerListFragment pmrlf = (PublicMessagesRecyclerListFragment) getSupportFragmentManager().findFragmentByTag(MESSAGE_FRAGMENT);
+                    pmrlf.setAdapter(new MessagesRecyclerListAdapter(getApplicationContext() , mMessages));
                 } else {
 
                     Timber.d("Error");
