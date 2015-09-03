@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.parse.FunctionCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseCloud;
@@ -60,18 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void sendMsg() {
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("body","Hello Ken");
-        ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
-            @Override
-            public void done(Object o, ParseException e) {
-               if(e != null) {
-                   Timber.e(e.getMessage());
-               } else if(o != null) {
-                   Timber.i(o.toString());
-               }
-            }
-        });
+
 
 /*        ParseObject msg = new ParseObject("Messages");
         ParseGeoPoint geoPoint = new ParseGeoPoint(51.5033630,-0.1276250);

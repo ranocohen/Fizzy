@@ -26,11 +26,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
+import com.parse.FunctionCallback;
 import com.parse.GetCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import java.util.HashMap;
+
+import timber.log.Timber;
 
 /**
  * Created by idanakav on 9/3/15.
@@ -117,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+        locationClient.connect();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.main_appbar);
@@ -157,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
+
+
         currentLocation = location;
         if (lastLocation != null
                 && geoPointFromLocation(location)
@@ -181,6 +190,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onConnected(Bundle bundle) {
         currentLocation = getLocation();
         startPeriodicUpdates();
+
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("body","Hello Ken");
+        map.put("location", new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude()));
+        ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
+            @Override
+            public void done(Object o, ParseException e) {
+                if (e != null) {
+                    Timber.e(e.getMessage());
+                } else if (o != null) {
+                    Timber.i(o.toString());
+                }
+
+                if (o == null) {
+                    Timber.i("NULL SHIT");
+                }
+            }
+        });
+
     }
 
     @Override
