@@ -3,8 +3,12 @@ package com.kilr.fizzy;
 import android.app.Application;
 
 import com.facebook.FacebookSdk;
+import com.kilr.fizzy.models.Message;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
+
+import timber.log.Timber;
 
 /**
  * Created by idanakav on 9/3/15.
@@ -15,8 +19,9 @@ public class FizzyApp extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Timber.plant(new Timber.DebugTree());
         FacebookSdk.sdkInitialize(getApplicationContext());
-
+        ParseObject.registerSubclass(Message.class);
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
 
