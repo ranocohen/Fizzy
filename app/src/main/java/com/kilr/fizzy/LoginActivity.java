@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
+import com.facebook.login.LoginManager;
 import com.facebook.GraphResponse;
 import com.parse.FunctionCallback;
 import com.parse.LogInCallback;
@@ -65,21 +65,41 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Button b2 = (Button) findViewById(R.id.button2);
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                action2();
+            }
+        });
+
     }
 
-    private void sendMsg() {
+    private void action2() {
         HashMap<String,Object> map = new HashMap<>();
-        map.put("body","Hello Ken");
-        ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
+        ParseCloud.callFunctionInBackground("push_test", map, new FunctionCallback<Object>() {
             @Override
             public void done(Object o, ParseException e) {
                 if (e != null) {
                     Timber.e(e.getMessage());
                 } else if (o != null) {
-                    Timber.i(o.toString());
+                    Toast.makeText(LoginActivity.this,o.toString(), Toast.LENGTH_SHORT).show();
+                }
+
+                if (o == null) {
+                    Timber.i("NULL SHIT");
                 }
             }
         });
+    }
+
+    private void sendMsg() {
+
+/*                if (e != null) {
+                    Timber.e(e.getMessage());
+                } else if (o != null) {
+                    Timber.i(o.toString());
+                }*/
 
 /*        ParseObject msg = new ParseObject("Messages");
         ParseGeoPoint geoPoint = new ParseGeoPoint(51.5033630,-0.1276250);
