@@ -62,6 +62,32 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Button b2 = (Button) findViewById(R.id.button2);
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                action2();
+            }
+        });
+
+    }
+
+    private void action2() {
+        HashMap<String,Object> map = new HashMap<>();
+        ParseCloud.callFunctionInBackground("push_test", map, new FunctionCallback<Object>() {
+            @Override
+            public void done(Object o, ParseException e) {
+                if (e != null) {
+                    Timber.e(e.getMessage());
+                } else if (o != null) {
+                    Toast.makeText(LoginActivity.this,o.toString(), Toast.LENGTH_SHORT).show();
+                }
+
+                if (o == null) {
+                    Timber.i("NULL SHIT");
+                }
+            }
+        });
     }
 
     private void sendMsg() {

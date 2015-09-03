@@ -40,6 +40,14 @@
         android:id="@+id/button"
         android:layout_gravity="center_horizontal" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Action2"
+        android:id="@+id/button2"
+        android:layout_gravity="center_horizontal" />
+
+
     <EditText
         android:hint="@string/enter_body"
         android:layout_width="362dp"

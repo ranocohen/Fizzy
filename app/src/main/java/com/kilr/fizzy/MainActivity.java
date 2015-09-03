@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
+import com.kilr.fizzy.models.Message;
+import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.GetCallback;
 import com.parse.ParseCloud;
@@ -35,6 +37,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.HashMap;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -163,7 +166,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        fetchNearMessages();
 
+    }
+
+    private void fetchNearMessages() {
+
+        //ParseGeoPoint userLocation = (ParseGeoPoint) userObject.get("location");
+
+        ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
+        query.findInBackground(new FindCallback<Message>() {
+            public void done(List<Message> messages, ParseException e) {
+                if (e == null) {
+                    for(Message msg : messages) {
+                        Timber.i(msg.getBody());
+                    }
+                } else {
+
+                    Timber.d("Error");
+                }
+            }
+        });
     }
 
     @Override
@@ -204,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentLocation = getLocation();
         startPeriodicUpdates();
 
-        HashMap<String,Object> map = new HashMap<>();
+      /*  HashMap<String,Object> map = new HashMap<>();
         map.put("body","Hello Ken");
         map.put("location", new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude()));
         ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
@@ -220,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Timber.i("NULL SHIT");
                 }
             }
-        });
+        });*/
 
     }
 
