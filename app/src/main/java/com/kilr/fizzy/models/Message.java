@@ -68,7 +68,6 @@ import java.util.Date;
 
     public ParseUser getFrom() {
         return getParseUser("from");
-
     }
 
     public void setFrom(ParseRelation<ParseUser> from) {

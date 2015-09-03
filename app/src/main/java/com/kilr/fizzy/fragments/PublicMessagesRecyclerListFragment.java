@@ -16,6 +16,9 @@ import com.kilr.fizzy.MainActivity;
 import com.kilr.fizzy.R;
 import com.kilr.fizzy.messaging.MessageItemTouchHelperCallback;
 import com.kilr.fizzy.messaging.MessagesRecyclerListAdapter;
+import com.kilr.fizzy.models.Message;
+
+import java.util.ArrayList;
 
 import timber.log.Timber;
 
@@ -26,8 +29,16 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
 
     private ItemTouchHelper mItemTouchHelper;
 
+    MessagesRecyclerListAdapter adapter;
+    RecyclerView recyclerView;
+
     public PublicMessagesRecyclerListFragment() {
 
+    }
+
+    public void setData(ArrayList<Message> messages) {
+        adapter.setmMessages(messages);
+        adapter.notifyDataSetChanged();
     }
 
     @Nullable
@@ -38,7 +49,7 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
 
         adapter = new MessagesRecyclerListAdapter(getActivity(), ((MainActivity)getActivity()).getmMessages());
 
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recyclerview);
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

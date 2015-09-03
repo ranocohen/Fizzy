@@ -18,8 +18,17 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
         implements MessageItemTouchHelperAdapter {
 
     private ArrayList<Message> mMessages = new ArrayList();
-
     private Context mCon;
+
+    public ArrayList<Message> getmMessages() {
+        return mMessages;
+    }
+
+    public void setmMessages(ArrayList<Message> mMessages) {
+        this.mMessages = mMessages;
+    }
+
+
     public MessagesRecyclerListAdapter(Context context, ArrayList<Message> messages) {
         this.mCon = context;
         mMessages = messages;
@@ -35,10 +44,18 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
 
     @Override
     public void onBindViewHolder(MessageViewHolder messageViewHolder, int i) {
-        messageViewHolder.mUserName.setText(mMessages.get(i).getTo().getUsername());
-        messageViewHolder.mTime.setText(mMessages.get(i).getCreatedAt().toString());
+        if(mMessages.get(i).getFrom()!=null) {
+            messageViewHolder.mUserName.setText(mMessages.get(i).getFrom().getString("email"));
+
+        }else
+            messageViewHolder.mUserName.setText("Lidan Hifi");
+        if(mMessages.get(i).getCreatedAt()!=null) {
+            messageViewHolder.mTime.setText(mMessages.get(i).getCreatedAt().toString());
+        }else
+            messageViewHolder.mTime.setText("");
+
         messageViewHolder.mMessageText.setText(mMessages.get(i).getBody());
-        
+
     }
 
     @Override

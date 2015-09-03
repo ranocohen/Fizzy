@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView.getMap().getUiSettings().setCompassEnabled(false);
         mapView.getMap().getUiSettings().setZoomControlsEnabled(true);
 
+        mapView.getMapAsync(this);
 
 
     }
@@ -201,9 +202,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mMessages.add(msg);
                     }
 
-                    //TODO update adapter
+//                    //TODO update adapter
                     PublicMessagesRecyclerListFragment pmrlf = (PublicMessagesRecyclerListFragment) getSupportFragmentManager().findFragmentByTag(MESSAGE_FRAGMENT);
-                    pmrlf.setAdapter(new MessagesRecyclerListAdapter(getApplicationContext() , mMessages));
+                    pmrlf.setData(mMessages);
                 } else {
 
                     Timber.d("Error");
