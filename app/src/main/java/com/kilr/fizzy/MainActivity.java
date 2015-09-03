@@ -131,6 +131,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // Add this line
+        mapFragment.getMap().setMyLocationEnabled(true);
+        mapFragment.getMap().setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                return false;
+            }
+        });
+
         CameraUpdate center = CameraUpdateFactory.newLatLng(centerDummy);
         mapFragment.getMap().moveCamera(center);
 
@@ -146,6 +155,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
         //TODO animate current location while map changes
+        Log.d(TAG, String.valueOf(i));
+        if(i == 0) {
+            
+        }
     }
 
     @Override
