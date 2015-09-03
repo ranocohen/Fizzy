@@ -6,64 +6,67 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kilr.fizzy.R;
+import com.kilr.fizzy.models.Message;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRecyclerListAdapter.ItemViewHolder>
+public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRecyclerListAdapter.MessageViewHolder>
         implements MessageItemTouchHelperAdapter {
 
-    private final List<String> mItems = new ArrayList<>();
+    private ArrayList<Message> mMessages = new ArrayList();
+
     private Context mCon;
-    public MessagesRecyclerListAdapter(Context context) {
+    public MessagesRecyclerListAdapter(Context context, ArrayList<Message> messages) {
         this.mCon = context;
-
-        String[] names = new String[] {"Idan" ,"Lidan","Ken","Ran"};
-        Random random = new Random();
-        for(int i =0 ;i<50;i++) {
-            int rand = random.nextInt(4);
-            mItems.add(names[rand]);
-        }
+        mMessages = messages;
     }
 
     @Override
-    public MessagesRecyclerListAdapter.ItemViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public MessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.message_layout, viewGroup, false);
-        ItemViewHolder itemViewHolder = new ItemViewHolder(view);
-        return itemViewHolder;
+        MessageViewHolder messageViewHolder = new MessageViewHolder(view);
+        return messageViewHolder;
     }
 
 
     @Override
-    public void onBindViewHolder(MessagesRecyclerListAdapter.ItemViewHolder itemViewHolder, int i) {
-        itemViewHolder.textView.setText(mCon.getString(R.string.is_hanzir,mItems.get(i)));
+    public void onBindViewHolder(MessageViewHolder messageViewHolder, int i) {
+        messageViewHolder.mUserName.setText(mMessages.get(i).getTo().getUsername());
+        messageViewHolder.mTime.setText(mMessages.get(i).getCreatedAt().toString());
+        messageViewHolder.mMessageText.setText(mMessages.get(i).getBody());
+        
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return mMessages.size();
     }
 
     @Override
     public void onItemDismiss(int position) {
-        mItems.remove(position);
+        mMessages.remove(position);
         notifyItemRemoved(position);
     }
 
-    public static class ItemViewHolder extends RecyclerView.ViewHolder implements
+    public static class MessageViewHolder extends RecyclerView.ViewHolder implements
             MessageItemTouchHelperViewHolder {
 
-        public final TextView textView;
-        //public final ImageView handleView;
+        public final TextView mMessageText;
+        public final ImageView mUserImage;
+        public final TextView mUserName;
+        public final TextView mTime;
 
-        public ItemViewHolder(View itemView) {
+        public MessageViewHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.text);
-            //handleView = (ImageView) itemView.findViewById(R.id.handle);
+            mMessageText = (TextView) itemView.findViewById(R.id.message_item_message_text);
+            mUserImage = (ImageView) itemView.findViewById(R.id.message_item_user_image);
+            mUserName = (TextView) itemView.findViewById(R.id.message_item_user_name);
+            mTime = (TextView) itemView.findViewById(R.id.message_item_time_text);
+
         }
 
         @Override

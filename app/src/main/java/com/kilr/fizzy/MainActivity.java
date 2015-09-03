@@ -10,7 +10,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -35,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
+import com.kilr.fizzy.messaging.MessagesRecyclerListAdapter;
 import com.kilr.fizzy.models.Message;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
@@ -44,6 +44,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static String TAG = MainActivity.class.toString();
 
     private final static int radius = 50;
+
+    private static String MESSAGE_FRAGMENT = "message_fragment";
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     /*
@@ -112,8 +115,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MapView mapView;
     private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton mFab;
+    private ArrayList<Message> mMessages = new ArrayList();
+
     FrameLayout test;
 
+    public ArrayList<Message> getmMessages() {
+        return mMessages;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (savedInstanceState == null) {
             PublicMessagesRecyclerListFragment fragment = new PublicMessagesRecyclerListFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content, fragment)
+                    .add(R.id.content, fragment, MESSAGE_FRAGMENT)
                     .commit();
         }
 
@@ -170,6 +178,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,SendMessageActivity.class));
             }
+        mapView.getMap().getUiSettings().setScrollGesturesEnabled(false);
+        mapView.getMap().getUiSettings().setCompassEnabled(false);
+        mapView.getMap().getUiSettings().setZoomControlsEnabled(true);
+
+
+
         });
     }
 
@@ -177,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
         fetchNearMessages();
-
     }
 
     private void fetchNearMessages() {
@@ -194,7 +207,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         .fromResource(R.drawable.ic_chat_bubble))
                                 .position(new LatLng(msg.getLocation().getLatitude(), msg.getLocation().getLongitude()))
                                 .title(msg.getBody()));
+                        mMessages.add(msg);
                     }
+
+                    //TODO update adapter
+                    PublicMessagesRecyclerListFragment pmrlf = (PublicMessagesRecyclerListFragment) getSupportFragmentManager().findFragmentByTag(MESSAGE_FRAGMENT);
+                    pmrlf.setAdapter(new MessagesRecyclerListAdapter(getApplicationContext() , mMessages));
                 } else {
 
                     Timber.d("Error");
