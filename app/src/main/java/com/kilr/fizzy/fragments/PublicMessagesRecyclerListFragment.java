@@ -4,6 +4,7 @@ package com.kilr.fizzy.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -24,7 +25,7 @@ import timber.log.Timber;
 public class PublicMessagesRecyclerListFragment extends Fragment {
 
     private ItemTouchHelper mItemTouchHelper;
-
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     public PublicMessagesRecyclerListFragment() {
     }
 
@@ -32,6 +33,7 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_public_messages,container,false);
+
 
         MessagesRecyclerListAdapter adapter = new MessagesRecyclerListAdapter(getActivity());
 

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.GraphResponse;
 import com.google.android.gms.appdatasearch.GetRecentContextCall;
@@ -215,7 +216,8 @@ public class LoginActivity extends AppCompatActivity {
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         String email = object.optString("email");
                         Timber.i("got email %s",email);
-                        user.put("email",email);
+                        user.put("email", email);
+                        user.put("fbUserId", Profile.getCurrentProfile().getId());
                         user.put("installation",installation);
                         ParseInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
                             @Override
