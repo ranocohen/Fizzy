@@ -24,8 +24,13 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 /**
  * Created by idanakav on 9/3/15.
@@ -136,11 +141,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
         mapFragment.getMap().animateCamera(zoom);
+
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //TODO center current location
+
     }
 
     @Override

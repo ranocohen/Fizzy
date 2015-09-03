@@ -11,7 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.parse.FunctionCallback;
 import com.parse.LogInCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseGeoPoint;
@@ -21,6 +23,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import timber.log.Timber;
@@ -57,14 +60,26 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void sendMsg() {
-        ParseObject msg = new ParseObject("Messages");
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("body","Hello Ken");
+        ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
+            @Override
+            public void done(Object o, ParseException e) {
+               if(e != null) {
+                   Timber.e(e.getMessage());
+               } else if(o != null) {
+                   Timber.i(o.toString());
+               }
+            }
+        });
+
+/*        ParseObject msg = new ParseObject("Messages");
         ParseGeoPoint geoPoint = new ParseGeoPoint(51.5033630,-0.1276250);
         msg.put("body",edit.getText().toString());
         msg.put("location",geoPoint);
         msg.put("from",ParseUser.getCurrentUser());
         msg.put("isPublic",true);
         msg.put("viewed",false);
-
         msg.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -75,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
             }
-        });
+        });*/
     }
 
     @Override
