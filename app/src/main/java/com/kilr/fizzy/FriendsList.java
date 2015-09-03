@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class FriendsList {
     private static FriendsList mInstance = null;
 
-    private static HashMap<String, Friend> friendsList;
+    private static ArrayList<Friend> friendsList;
 
     private FriendsList(){
 
@@ -21,13 +21,18 @@ public class FriendsList {
         if(mInstance == null)
         {
             mInstance = new FriendsList();
-            friendsList = new HashMap<>();
+            friendsList = new ArrayList<>();
         }
         return mInstance;
     }
 
     public static void addFriend(Friend friend) {
-        friendsList.put(friend.getUserId(), friend);
+        friendsList.add(friend);
+    }
+
+
+    public static ArrayList<Friend> getFriendsList() {
+        return friendsList;
     }
 
 }
