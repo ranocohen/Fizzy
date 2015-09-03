@@ -34,10 +34,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
 import com.kilr.fizzy.models.Message;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 
+import java.util.HashMap;
 import java.util.List;
 
 import timber.log.Timber;
@@ -227,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentLocation = getLocation();
         startPeriodicUpdates();
 
-      /*  HashMap<String,Object> map = new HashMap<>();
+        HashMap<String,Object> map = new HashMap<>();
         map.put("body","Hello Ken");
         map.put("location", new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude()));
         ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
@@ -243,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Timber.i("NULL SHIT");
                 }
             }
-        });*/
+        });
 
     }
 
