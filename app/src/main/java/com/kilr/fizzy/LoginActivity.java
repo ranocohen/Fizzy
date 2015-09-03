@@ -15,6 +15,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -22,10 +23,13 @@ import com.parse.SaveCallback;
 import java.util.Arrays;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Dialog progressDialog;
     public static final String TAG = LoginActivity.class.getCanonicalName();
+    private EditText edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,34 +44,38 @@ public class LoginActivity extends AppCompatActivity {
             // Go to the user info activity
             showMainActivity();
         }
-        final EditText edit = (EditText) findViewById(R.id.editText);
+        edit = (EditText) findViewById(R.id.editText);
         Button b = (Button) findViewById(R.id.button);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseObject msg = new ParseObject("Messages");
-                ParseGeoPoint geoPoint = new ParseGeoPoint(51.5033630,-0.1276250);
-                msg.put("body",edit.getText().toString());
-                msg.put("location",geoPoint);
-                msg.put("from",ParseUser.getCurrentUser());
-                msg.put("isPublic",true);
-                msg.put("viewed",false);
-
-                msg.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null) {
-                            Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "sent", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                });
+                sendMsg();
 
             }
         });
 
+    }
+
+    private void sendMsg() {
+        ParseObject msg = new ParseObject("Messages");
+        ParseGeoPoint geoPoint = new ParseGeoPoint(51.5033630,-0.1276250);
+        msg.put("body",edit.getText().toString());
+        msg.put("location",geoPoint);
+        msg.put("from",ParseUser.getCurrentUser());
+        msg.put("isPublic",true);
+        msg.put("viewed",false);
+
+        msg.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "sent", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
     }
 
     @Override
@@ -91,12 +99,11 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
                     Log.d(TAG, "User signed up and logged in through Facebook!");
-                    user.setEmail("idanakav@gmail.com");
-                    user.saveInBackground();
+                    saveInParse(user, ParseInstallation.getCurrentInstallation());
                     showMainActivity();
                 } else {
+                    saveInParse(user,ParseInstallation.getCurrentInstallation());
                     Log.d(TAG, "User logged in through Facebook!");
-                    user.setEmail("idanakav@gmail.com");
 
                     showMainActivity();
                 }
@@ -105,10 +112,27 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    public void saveInParse(ParseUser user,ParseInstallation installation) {
+        user.setEmail("idanakav@gmail.com");
+        installation = ParseInstallation.getCurrentInstallation();
+        installation.put("User",ParseUser.getCurrentUser());
+        ParseInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Timber.e(e.getMessage());
+                } else {
+                    Timber.i("Sent!");
+
+                }
+            }
+        });
+        user.saveInBackground();
+    }
 
     private void showMainActivity() {
-        // Intent intent = new Intent(this, MainActivity.class);
-         // startActivity(intent);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
 }

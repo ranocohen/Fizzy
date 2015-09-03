@@ -6,6 +6,8 @@ import com.facebook.FacebookSdk;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 
+import timber.log.Timber;
+
 /**
  * Created by idanakav on 9/3/15.
  */
@@ -14,7 +16,7 @@ public class FizzyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Timber.plant(new Timber.DebugTree());
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         // Enable Local Datastore.

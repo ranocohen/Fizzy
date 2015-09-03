@@ -39,6 +39,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <meta-data android:name="com.parse.push.gcm_sender_id"
+            android:value="id:473718817602" />
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name">
