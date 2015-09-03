@@ -66,11 +66,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private void sendMsg() {
 
-                if (e != null) {
+/*                if (e != null) {
                     Timber.e(e.getMessage());
                 } else if (o != null) {
                     Timber.i(o.toString());
-                }
+                }*/
 
 /*        ParseObject msg = new ParseObject("Messages");
         ParseGeoPoint geoPoint = new ParseGeoPoint(51.5033630,-0.1276250);
