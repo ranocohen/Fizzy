@@ -1,0 +1,75 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="eu.fiskur.pennineway.tutorial.TutorialActivity"
+    android:background="@android:color/transparent">
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/tutorial_background_opaque"/>
+
+    <!--<View-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:layout_above="@+id/button_layout"-->
+    <!--android:background="#33ffffff"/>-->
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/button_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        >
+
+        <Button
+            android:id="@+id/skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="SKIP"
+            android:textSize="18sp"
+            android:textColor="@color/tutorial_button"
+            android:background="@android:color/transparent"/>
+
+        <FrameLayout
+            android:id="@+id/indicator_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:visibility="visible" />
+
+
+        <Button
+            android:id="@+id/done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="DONE"
+            android:textSize="18sp"
+            android:textColor="@color/tutorial_button"
+            android:background="@android:color/transparent"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/next"
+            android:layout_width="90dp"
+            android:layout_height="45dp"
+            android:paddingTop="13dp"
+            android:paddingBottom="12dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/notification_template_icon_bg"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>
