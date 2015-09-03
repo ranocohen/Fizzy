@@ -12,6 +12,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
 
 /**
  * Created by idanakav on 9/3/15.
@@ -23,8 +24,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng centerDummy = new LatLng(32.066158, 34.777819);
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
@@ -35,12 +36,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setSupportActionBar(toolbar);
 
-//        if (savedInstanceState == null) {
-//            PublicMessagesRecyclerListFragment fragment = new PublicMessagesRecyclerListFragment();
-//            getFragmentManager().beginTransaction()
-//                    .add(R.id.content, fragment)
-//                    .commit();
-//        }
+        if (savedInstanceState == null) {
+            PublicMessagesRecyclerListFragment fragment = new PublicMessagesRecyclerListFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.content, fragment)
+                    .commit();
+        }
 
         mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
         mapFragment.getMap().animateCamera(zoom);
-
     }
 
     @Override
