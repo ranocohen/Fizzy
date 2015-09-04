@@ -3,6 +3,7 @@ package com.kilr.fizzy;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -112,8 +113,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private LocationRequest locationRequest; // A request to connect to Location Services
     private GoogleApiClient locationClient; // Stores the current instantiation of the location client in this object
-    private Location lastLocation;
-    private Location currentLocation;
+    public static Location lastLocation;
+    public static Location currentLocation;
     private boolean hasSetUpInitialLocation;
     private GoogleMap map;
     private MapView mapView;
@@ -156,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.toolbar_title));
+        toolbar.setTitleTextColor(Color.WHITE);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.main_appbar);
 
         mAppBarLayout.addOnOffsetChangedListener(this);
@@ -211,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     for (Message msg : messages) {
                         map.addMarker(new MarkerOptions()
                                 .icon(BitmapDescriptorFactory
-                                        .fromResource(R.drawable.ic_chat_bubble))
+                                        .fromResource(R.drawable.ic_chat))
                                 .position(new LatLng(msg.getLocation().getLatitude(), msg.getLocation().getLongitude()))
                                 .title(msg.getBody()));
                         mMessages.add(msg);
@@ -503,7 +506,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_ar, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 

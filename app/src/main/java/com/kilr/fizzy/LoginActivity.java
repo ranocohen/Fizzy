@@ -35,7 +35,6 @@ import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private Dialog progressDialog;
     public static final String TAG = LoginActivity.class.getCanonicalName();
     private EditText edit;
 
@@ -52,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             // Go to the user info activity
             showMainActivity();
         }
-        edit = (EditText) findViewById(R.id.editText);
+      /*  edit = (EditText) findViewById(R.id.editText);
         Button b = (Button) findViewById(R.id.button);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                 action2();
             }
         });
-
+*/
     }
 
     private void action2() {
@@ -120,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginClick(View v) {
-        progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
+       // progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
         List<String> permissions = Arrays.asList("public_profile", "email", "user_friends");
         // NOTE: for extended permissions, like "user_about_me", your app must be reviewed by the Facebook team
@@ -132,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void done(ParseUser user, ParseException err) {
-                progressDialog.dismiss();
+           //     progressDialog.dismiss();
                 if (user == null) {
                     Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
