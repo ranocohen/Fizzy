@@ -17,8 +17,10 @@ import com.kilr.fizzy.R;
 import com.kilr.fizzy.messaging.MessageItemTouchHelperCallback;
 import com.kilr.fizzy.messaging.MessagesRecyclerListAdapter;
 import com.kilr.fizzy.models.Message;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import timber.log.Timber;
 
@@ -36,8 +38,9 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
 
     }
 
-    public void setData(ArrayList<Message> messages) {
+    public void setData(ArrayList<Message> messages, HashMap<String, ParseUser> users) {
         adapter.setmMessages(messages);
+        adapter.setUsers(users);
         adapter.notifyDataSetChanged();
     }
 
