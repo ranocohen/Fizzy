@@ -41,12 +41,16 @@ import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import timber.log.Timber;
 
@@ -116,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton mFab;
     private ArrayList<Message> mMessages = new ArrayList();
+    private HashMap<String, ParseUser> mUsers = new HashMap<>();
 
     FrameLayout test;
 
@@ -148,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationClient.connect();
 
 
-
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.main_appbar);
 
@@ -174,11 +178,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startActivity(new Intent(MainActivity.this, SendMessageActivity.class));
-                                    }
-                                });
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SendMessageActivity.class));
+            }
+        });
         mapView.getMap().getUiSettings().setScrollGesturesEnabled(false);
         mapView.getMap().getUiSettings().setCompassEnabled(false);
         mapView.getMap().getUiSettings().setZoomControlsEnabled(true);
@@ -196,7 +200,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void fetchNearMessages() {
 
         //ParseGeoPoint userLocation = (ParseGeoPoint) userObject.get("location");
-        List<String> ids = new ArrayList<>();
+//        final List<String> ids = new ArrayList<>();
+        //mMessages.get(i).getObjectId();
 
         ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
         query.findInBackground(new FindCallback<Message>() {
@@ -209,11 +214,40 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 .position(new LatLng(msg.getLocation().getLatitude(), msg.getLocation().getLongitude()))
                                 .title(msg.getBody()));
                         mMessages.add(msg);
+
                     }
+
+                    HashSet<String> uniqueIds = new HashSet<String>();
+
+                    for (int i = 0; i < mMessages.size(); i++) {
+                            uniqueIds.add(mMessages.get(i).getFrom().getObjectId());
+                    }
+                    ParseQuery<ParseUser> query = ParseUser.getQuery();
+                    query.whereContainedIn("objectId", Arrays.asList(uniqueIds.toArray(new String[1])));
+                    List<ParseUser> results = null;
+                    try {
+                        results = query.find();
+                        int i=0;
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                    }finally {
+                        Log.d("fuck", results.toString());
+                        for (int i = 0; i < results.size(); i++) {
+                            mUsers.put(results.get(i).getObjectId(),results.get(i));
+                        }
+                    }
+
+//                    query.findInBackground(new FindCallback<ParseObject>() {
+//                        @Override
+//                        public void done(List<ParseObject> list, ParseException e) {
+//                            Timber.i("you have %d friends!!!", list.size());
+//                        }
+//                    });
+
 
 //                    //TODO update adapter
                     PublicMessagesRecyclerListFragment pmrlf = (PublicMessagesRecyclerListFragment) getSupportFragmentManager().findFragmentByTag(MESSAGE_FRAGMENT);
-                    pmrlf.setData(mMessages);
+                    pmrlf.setData(mMessages, mUsers);
                 } else {
 
                     Timber.d("Error");
@@ -242,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         if (!hasSetUpInitialLocation) {
             // Zoom to the current location.
-            LatLng latlng = new LatLng(location.getLatitude(),location.getLongitude());
+            LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
             LatLngBounds bounds = LatLngBounds.builder().include(latlng).build();
             mapView.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 5));
 
@@ -257,28 +291,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onConnected(Bundle bundle) {
         currentLocation = getLocation();
-        ParseGeoPoint parseGeoPoint = new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude());
-        ParseUser.getCurrentUser().put("last_known_location",parseGeoPoint);
+        ParseGeoPoint parseGeoPoint = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());
+        ParseUser.getCurrentUser().put("last_known_location", parseGeoPoint);
 
         startPeriodicUpdates();
 
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("body","Hello Kenlkasdj");
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("body", "Hello Kenlkasdj");
         map.put("location", parseGeoPoint);
-        ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
-            @Override
-            public void done(Object o, ParseException e) {
-                if (e != null) {
-                    Timber.e(e.getMessage());
-                } else if (o != null) {
-                    Timber.i(o.toString());
-                }
-
-                if (o == null) {
-                    Timber.i("NULL SHIT");
-                }
-            }
-        });
+//        ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
+//            @Override
+//            public void done(Object o, ParseException e) {
+//                if (e != null) {
+//                    Timber.e(e.getMessage());
+//                } else if (o != null) {
+//                    Timber.i(o.toString());
+//                }
+//
+//                if (o == null) {
+//                    Timber.i("NULL SHIT");
+//                }
+//            }
+//        });
 
     }
 

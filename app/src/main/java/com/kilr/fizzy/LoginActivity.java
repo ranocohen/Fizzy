@@ -215,7 +215,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         String email = object.optString("email");
+                        String username = object.optString("name");
                         Timber.i("got email %s",email);
+                        user.put("name", username);
                         user.put("email", email);
                         user.put("fbUserId", Profile.getCurrentProfile().getId());
                         user.put("installation",installation);
@@ -234,7 +236,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "email");
+        parameters.putString("fields", "email,id,name,link");
+
         request.setParameters(parameters);
         request.executeAsync();
 

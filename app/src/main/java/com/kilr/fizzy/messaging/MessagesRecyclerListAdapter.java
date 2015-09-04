@@ -12,13 +12,28 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.kilr.fizzy.R;
 import com.kilr.fizzy.models.Message;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRecyclerListAdapter.MessageViewHolder>
         implements MessageItemTouchHelperAdapter {
 
     private ArrayList<Message> mMessages = new ArrayList();
+
+    public HashMap<String, ParseUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(HashMap<String, ParseUser> users) {
+        this.users = users;
+    }
+
+    HashMap<String, ParseUser> users = new HashMap<>();
+
     private Context mCon;
 
     public ArrayList<Message> getmMessages() {
@@ -45,6 +60,22 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
 
     @Override
     public void onBindViewHolder(MessageViewHolder messageViewHolder, int i) {
+
+        ParseUser pu = users.get(mMessages.get(i).getFrom().getObjectId());
+
+        if(pu!=null) {
+            if (pu.getString("name") != null)
+                messageViewHolder.mUserName.setText(pu.getString("name"));
+            else
+                messageViewHolder.mUserName.setText("anonymous");
+
+            if (pu.getString("fbUserId") != null) {
+                String imgUrl = "https://graph.facebook.com/" + pu.getString("fbUserId") + "/picture?type=small";
+                Glide.with(mCon).load(imgUrl).into(messageViewHolder.mUserImage);
+            }
+        }
+
+
         if(mMessages.get(i).getFrom()!=null) {
             //messageViewHolder.mUserName.setText(mMessages.get(i).getFrom());
             messageViewHolder.mUserName.setText("");
@@ -57,7 +88,6 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
 
         messageViewHolder.mMessageText.setText(mMessages.get(i).getBody());
 
-        Glide.with(mCon).load("USER IMAGE URL").into(messageViewHolder.mUserImage);
 
     }
 
