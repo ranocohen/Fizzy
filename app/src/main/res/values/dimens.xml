@@ -8,7 +8,7 @@
     <dimen name="compass_marker_line_width">1dp</dimen>
     <dimen name="intro_main_title_gradient_width">75dp</dimen>
 
-    <dimen name="directional_tv_main_text_size">90sp</dimen>
+    <dimen name="directional_tv_main_text_size">50sp</dimen>
 
     <dimen name="tut_single_skyline_width">320dp</dimen>
     <dimen name="tut_full_skyline_width">1280dp</dimen>

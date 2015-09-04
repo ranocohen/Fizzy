@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mAppBarLayout.addOnOffsetChangedListener(this);
 
         setSupportActionBar(toolbar);
-
         if (savedInstanceState == null) {
             PublicMessagesRecyclerListFragment fragment = new PublicMessagesRecyclerListFragment();
             getSupportFragmentManager().beginTransaction()

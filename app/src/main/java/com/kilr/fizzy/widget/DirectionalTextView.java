@@ -151,6 +151,19 @@ public class DirectionalTextView extends FrameLayout
 
         this.setText(place.getName());
         this.setDistance(place.getDistance());
+        float sizeSmall = getResources().getDimension(R.dimen.directional_tv_main_text_size_small);
+        float realDistance = (float) (place.getDistance()/1000.0);
+
+        float realSize = sizeSmall * 1/realDistance;
+
+        if(realSize > sizeSmall*2) {
+            realSize = sizeSmall*2;
+        } else if(realSize < sizeSmall*0.5) {
+            realSize = sizeSmall*0.5f;
+        }
+        mMainText.setTextSize(TypedValue.COMPLEX_UNIT_PX, realSize);
+
+
     }
 
     public void setText(String name)

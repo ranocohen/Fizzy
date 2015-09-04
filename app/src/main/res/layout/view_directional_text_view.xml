@@ -14,7 +14,6 @@
         android:id="@+id/dtv_main_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:lineSpacingExtra="-45sp"
         android:maxLines="2"
         android:text="Literally Anything"
         android:ellipsize="end"/>
