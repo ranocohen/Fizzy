@@ -1,48 +1,47 @@
 package com.kilr.fizzy;
 
+import android.graphics.Color;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.kilr.fizzy.models.Friend;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import timber.log.Timber;
 
 public class SendMessageActivity extends AppCompatActivity {
-
+    EditText edit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_message);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Compose");
+        toolbar.setTitleTextColor(Color.WHITE);
 
-        List<Friend> friends = FriendsList.getFriendsList();
-
-        List<String> ids = new ArrayList<>();
-
-        for(Friend f : friends) {
-            ids.add(f.getUserId());
+        final ActionBar ab = getSupportActionBar();
+        if(ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
         }
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
-        query.whereContainedIn("fbUserId",ids);
-        //query.whereContainedIn("objectId",ids);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> list, ParseException e) {
-                Timber.i("you have %d friends!!!",list.size());
-            }
-        });
-
-
+        edit = (EditText) findViewById(R.id.edit);
     }
 
     @Override
@@ -61,9 +60,40 @@ public class SendMessageActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            sendMsg();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sendMsg() {
+                HashMap<String,Object> map = new HashMap<>();
+
+        if(MainActivity.currentLocation != null) {
+            ParseGeoPoint loc = new ParseGeoPoint(MainActivity.currentLocation.getLatitude(),
+                    MainActivity.currentLocation.getLongitude());
+
+            map.put("body", edit.getText().toString());
+            map.put("location", loc);
+            ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
+                @Override
+                public void done(Object o, ParseException e) {
+                    if (e != null) {
+                        Timber.e(e.getMessage());
+                    } else if (o != null) {
+                        Timber.i(o.toString());
+                        Toast.makeText(SendMessageActivity.this, "Sent!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+
+                    if (o == null) {
+                        Timber.i("NULL SHIT");
+                    }
+                }
+            });
+        }
+
+
     }
 }

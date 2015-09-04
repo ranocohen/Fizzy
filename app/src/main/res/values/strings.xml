@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Fizzy</string>
-
+    <string name="toolbar_title">Fizzes near you</string>
     <string name="facebook_app_id">426222387577557</string>
     <string name="google_maps_id">AIzaSyCTzfkpx0A0L-Z6af8a45P2mUwwL19Pjhk</string>
 
@@ -11,4 +11,6 @@
     <string name="welcome">Welcome to Fizzy</string>
     <string name="is_hanzir">is hazir</string>
     <string name="title_activity_send_message">SendMessageActivity</string>
+    <string name="title_activity_ar">ARActivity</string>
+    <string name="ar">Augmented Reality</string>
 </resources>

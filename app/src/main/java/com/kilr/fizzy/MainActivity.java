@@ -3,19 +3,19 @@ package com.kilr.fizzy;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -34,8 +34,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
-import com.kilr.fizzy.messaging.MessagesRecyclerListAdapter;
 import com.kilr.fizzy.models.Message;
+import com.kilr.fizzy.sensors.HeadTracker;
+import com.kilr.fizzy.sensors.HeadTransform;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
@@ -112,8 +113,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private LocationRequest locationRequest; // A request to connect to Location Services
     private GoogleApiClient locationClient; // Stores the current instantiation of the location client in this object
-    private Location lastLocation;
-    private Location currentLocation;
+    public static Location lastLocation;
+    public static Location currentLocation;
     private boolean hasSetUpInitialLocation;
     private GoogleMap map;
     private MapView mapView;
@@ -123,6 +124,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private HashMap<String, ParseUser> mUsers = new HashMap<>();
 
     FrameLayout test;
+
+
 
     public ArrayList<Message> getmMessages() {
         return mMessages;
@@ -154,12 +157,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.toolbar_title));
+        toolbar.setTitleTextColor(Color.WHITE);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.main_appbar);
 
         mAppBarLayout.addOnOffsetChangedListener(this);
 
         setSupportActionBar(toolbar);
-
         if (savedInstanceState == null) {
             PublicMessagesRecyclerListFragment fragment = new PublicMessagesRecyclerListFragment();
             getSupportFragmentManager().beginTransaction()
@@ -210,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     for (Message msg : messages) {
                         map.addMarker(new MarkerOptions()
                                 .icon(BitmapDescriptorFactory
-                                        .fromResource(R.drawable.ic_chat_bubble))
+                                        .fromResource(R.drawable.ic_chat))
                                 .position(new LatLng(msg.getLocation().getLatitude(), msg.getLocation().getLongitude()))
                                 .title(msg.getBody()));
                         mMessages.add(msg);
@@ -248,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                    //TODO update adapter
                     PublicMessagesRecyclerListFragment pmrlf = (PublicMessagesRecyclerListFragment) getSupportFragmentManager().findFragmentByTag(MESSAGE_FRAGMENT);
                     pmrlf.setData(mMessages, mUsers);
+
                 } else {
 
                     Timber.d("Error");
@@ -296,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         startPeriodicUpdates();
 
-        HashMap<String, Object> map = new HashMap<>();
+    /*    HashMap<String,Object> map = new HashMap<>();
         map.put("body", "Hello Kenlkasdj");
         map.put("location", parseGeoPoint);
 //        ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
@@ -312,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                    Timber.i("NULL SHIT");
 //                }
 //            }
-//        });
+        });*/
 
     }
 
@@ -478,17 +483,46 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onPause() {
         super.onPause();
         mapView.onPause();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+
+
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
+    }
+
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this,ARActivity.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

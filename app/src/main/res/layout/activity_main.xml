@@ -67,9 +67,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_chat_bubble"
+            android:src="@drawable/fab_icon"
+            app:backgroundTint="#ffffff"
             app:fabSize="normal"
             android:clickable="true"
+            android:scaleType="center"
             app:layout_anchor="@id/content"
             app:layout_anchorGravity="top|right"/>
 
@@ -79,8 +81,13 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
+        android:title="@string/toolbar_title"
+        android:titleTextColor="#ffffff"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
 
     <!--app:poSpupTheme="@style/ThemeOverlay.AppCompat.Light"-->
 

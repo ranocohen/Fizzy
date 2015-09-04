@@ -3,8 +3,8 @@ package com.kilr.fizzy;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,25 +13,18 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
-import com.facebook.Profile;
-import com.facebook.login.LoginManager;
 import com.facebook.GraphResponse;
-import com.google.android.gms.appdatasearch.GetRecentContextCall;
-import com.kilr.fizzy.models.Friend;
+import com.facebook.Profile;
 import com.parse.FunctionCallback;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -42,7 +35,6 @@ import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private Dialog progressDialog;
     public static final String TAG = LoginActivity.class.getCanonicalName();
     private EditText edit;
 
@@ -59,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             // Go to the user info activity
             showMainActivity();
         }
-        edit = (EditText) findViewById(R.id.editText);
+      /*  edit = (EditText) findViewById(R.id.editText);
         Button b = (Button) findViewById(R.id.button);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                 action2();
             }
         });
-
+*/
     }
 
     private void action2() {
@@ -127,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginClick(View v) {
-        progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
+       // progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
         List<String> permissions = Arrays.asList("public_profile", "email", "user_friends");
         // NOTE: for extended permissions, like "user_about_me", your app must be reviewed by the Facebook team
@@ -139,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void done(ParseUser user, ParseException err) {
-                progressDialog.dismiss();
+           //     progressDialog.dismiss();
                 if (user == null) {
                     Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
