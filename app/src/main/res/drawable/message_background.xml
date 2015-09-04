@@ -4,7 +4,7 @@
 
     <corners android:radius="4dp" />
 
-    <solid android:color="@color/wallet_hint_foreground_holo_light" />
+    <solid android:color="@color/rectcolor" />
 
     <padding
         android:left="3dp"

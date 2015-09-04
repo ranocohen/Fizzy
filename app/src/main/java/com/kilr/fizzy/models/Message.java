@@ -24,7 +24,7 @@ import java.util.Date;
     boolean viewed;
     ParseRelation<ParseUser> to;
     ParseRelation<ParseUser> from;
-    Date createdAt;
+    //Date createdAt;
 
     public boolean isPublic() {
         return getBoolean("isPublic");
@@ -74,14 +74,14 @@ import java.util.Date;
         put("from",from);
     }
 
-    @Override
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+//    @Override
+//    public Date getCreatedAt() {
+//        return createdAt;
+//    }
+//
+//    public void setCreatedAt(Date createdAt) {
+//        this.createdAt = createdAt;
+//    }
 
 
 

@@ -15,6 +15,7 @@ import com.kilr.fizzy.models.Message;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -75,14 +76,10 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
             }
         }
 
-
-        if(mMessages.get(i).getFrom()!=null) {
-            //messageViewHolder.mUserName.setText(mMessages.get(i).getFrom());
-            messageViewHolder.mUserName.setText("");
-        }else
-            messageViewHolder.mUserName.setText("Lidan Hifi");
         if(mMessages.get(i).getCreatedAt()!=null) {
-            messageViewHolder.mTime.setText(mMessages.get(i).getCreatedAt().toString());
+            Date date = mMessages.get(i).getCreatedAt();
+            String time = String.valueOf(date.getHours())+ ":" + String.valueOf(date.getMinutes());
+            messageViewHolder.mTime.setText(time);
         }else
             messageViewHolder.mTime.setText("");
 
@@ -106,14 +103,14 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
             MessageItemTouchHelperViewHolder {
 
         public final TextView mMessageText;
-        public final ImageView mUserImage;
+        public final CircleImageView mUserImage;
         public final TextView mUserName;
         public final TextView mTime;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
             mMessageText = (TextView) itemView.findViewById(R.id.message_item_message_text);
-            mUserImage = (ImageView) itemView.findViewById(R.id.message_item_user_image);
+            mUserImage = (CircleImageView) itemView.findViewById(R.id.message_item_user_image);
             mUserName = (TextView) itemView.findViewById(R.id.message_item_user_name);
             mTime = (TextView) itemView.findViewById(R.id.message_item_time_text);
 

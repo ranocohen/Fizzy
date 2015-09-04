@@ -5,4 +5,8 @@
     <item name="chevron" type="color">#5ce52e</item>
     <color name="primary">#785447</color>
     <color name="primaryDark">#5B3F36</color>
+    <color name="secondary">#EFEFEF</color>
+    <color name="textcolor">#ABABAB</color>
+    <color name="rectcolor">#d7d7d7</color>
+
 </resources>

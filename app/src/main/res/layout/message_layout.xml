@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="4dp"
+    android:padding="6dp"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="5dp"
         android:id="@+id/message_item_user_image"
-        android:layout_width="25dp"
-        android:layout_height="25dp" />
+        android:layout_width="35dp"
+        android:layout_height="35dp" />
     
     <LinearLayout
         android:layout_centerVertical="true"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/message_item_user_image"
         android:id="@+id/message_container"
         android:orientation="vertical"
@@ -24,15 +24,20 @@
 
         <TextView
             android:id="@+id/message_item_user_name"
-            android:gravity="center"
+            android:gravity="left"
+            android:text="test"
+            android:textSize="12sp"
+            android:textColor="@color/textcolor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="left" />
         
         <TextView
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
             android:background="@drawable/message_background"
+            android:padding="4dp"
             android:text="test"
             android:id="@+id/message_item_message_text"
             android:layout_width="wrap_content"
@@ -42,8 +47,11 @@
 
     <TextView
         android:layout_alignBottom="@+id/message_container"
+        android:layout_marginLeft="4dp"
         android:layout_toRightOf="@+id/message_container"
         android:id="@+id/message_item_time_text"
+        android:textSize="12sp"
+        android:textColor="@color/textcolor"
         android:gravity="bottom|center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
