@@ -62,28 +62,45 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
     @Override
     public void onBindViewHolder(MessageViewHolder messageViewHolder, int i) {
 
-        ParseUser pu = users.get(mMessages.get(i).getFrom().getObjectId());
-
-        if(pu!=null) {
-            if (pu.getString("name") != null)
-                messageViewHolder.mUserName.setText(pu.getString("name"));
-            else
-                messageViewHolder.mUserName.setText("anonymous");
-
-            if (pu.getString("fbUserId") != null) {
-                String imgUrl = "https://graph.facebook.com/" + pu.getString("fbUserId") + "/picture?type=small";
-                Glide.with(mCon).load(imgUrl).into(messageViewHolder.mUserImage);
-            }
+        ParseUser pu = null;
+        try {
+            pu = users.get(mMessages.get(i).getFrom().getObjectId());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        if(mMessages.get(i).getCreatedAt()!=null) {
-            Date date = mMessages.get(i).getCreatedAt();
-            String time = String.valueOf(date.getHours())+ ":" + String.valueOf(date.getMinutes());
-            messageViewHolder.mTime.setText(time);
-        }else
-            messageViewHolder.mTime.setText("");
+        try {
+            if(pu!=null) {
+                if (pu.getString("name") != null)
+                    messageViewHolder.mUserName.setText(pu.getString("name"));
+                else
+                    messageViewHolder.mUserName.setText("anonymous");
 
-        messageViewHolder.mMessageText.setText(mMessages.get(i).getBody());
+                if (pu.getString("fbUserId") != null) {
+                    String imgUrl = "https://graph.facebook.com/" + pu.getString("fbUserId") + "/picture?type=small";
+                    Glide.with(mCon).load(imgUrl).into(messageViewHolder.mUserImage);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if(mMessages.get(i).getCreatedAt()!=null) {
+                Date date = mMessages.get(i).getCreatedAt();
+                String time = String.valueOf(date.getHours())+ ":" + String.valueOf(date.getMinutes());
+                messageViewHolder.mTime.setText(time);
+            }else
+                messageViewHolder.mTime.setText("");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            messageViewHolder.mMessageText.setText(mMessages.get(i).getBody());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }

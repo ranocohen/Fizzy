@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
         mapView.getMap().animateCamera(zoom);
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
         mapView.getMap().getUiSettings().setScrollGesturesEnabled(false);
         mapView.getMap().getUiSettings().setCompassEnabled(false);
-        mapView.getMap().getUiSettings().setZoomControlsEnabled(true);
+        mapView.getMap().getUiSettings().setZoomControlsEnabled(false);
 
         mapView.getMapAsync(this);
 
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Zoom to the current location.
             LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
             LatLngBounds bounds = LatLngBounds.builder().include(latlng).build();
-            mapView.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 5));
+            mapView.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 16));
 
             hasSetUpInitialLocation = true;
         }
