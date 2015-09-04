@@ -3,8 +3,8 @@ package com.kilr.fizzy;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,25 +13,18 @@ import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
-import com.facebook.Profile;
-import com.facebook.login.LoginManager;
 import com.facebook.GraphResponse;
-import com.google.android.gms.appdatasearch.GetRecentContextCall;
-import com.kilr.fizzy.models.Friend;
+import com.facebook.Profile;
 import com.parse.FunctionCallback;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
