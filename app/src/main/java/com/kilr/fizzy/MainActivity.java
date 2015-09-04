@@ -174,18 +174,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,SendMessageActivity.class));
-            }
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(MainActivity.this, SendMessageActivity.class));
+                                    }
+                                });
         mapView.getMap().getUiSettings().setScrollGesturesEnabled(false);
         mapView.getMap().getUiSettings().setCompassEnabled(false);
         mapView.getMap().getUiSettings().setZoomControlsEnabled(true);
 
         mapView.getMapAsync(this);
 
-
-        });
     }
 
     @Override
@@ -197,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void fetchNearMessages() {
 
         //ParseGeoPoint userLocation = (ParseGeoPoint) userObject.get("location");
+        List<String> ids = new ArrayList<>();
 
         ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
         query.findInBackground(new FindCallback<Message>() {

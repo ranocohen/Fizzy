@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kilr.fizzy.R;
 import com.kilr.fizzy.models.Message;
 
@@ -45,8 +46,8 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
     @Override
     public void onBindViewHolder(MessageViewHolder messageViewHolder, int i) {
         if(mMessages.get(i).getFrom()!=null) {
-            messageViewHolder.mUserName.setText(mMessages.get(i).getFrom().getString("email"));
-
+            //messageViewHolder.mUserName.setText(mMessages.get(i).getFrom());
+            messageViewHolder.mUserName.setText("");
         }else
             messageViewHolder.mUserName.setText("Lidan Hifi");
         if(mMessages.get(i).getCreatedAt()!=null) {
@@ -55,6 +56,8 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
             messageViewHolder.mTime.setText("");
 
         messageViewHolder.mMessageText.setText(mMessages.get(i).getBody());
+
+        Glide.with(mCon).load("USER IMAGE URL").into(messageViewHolder.mUserImage);
 
     }
 

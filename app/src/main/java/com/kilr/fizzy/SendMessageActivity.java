@@ -34,6 +34,7 @@ public class SendMessageActivity extends AppCompatActivity {
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         query.whereContainedIn("fbUserId",ids);
+        //query.whereContainedIn("objectId",ids);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> list, ParseException e) {
