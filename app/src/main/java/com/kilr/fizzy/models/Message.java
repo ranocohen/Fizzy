@@ -1,6 +1,7 @@
 package com.kilr.fizzy.models;
 
-import com.parse.ParseGeoPoint;
+
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by idanakav on 9/3/15.
@@ -12,7 +13,7 @@ import com.parse.ParseGeoPoint;
 
     boolean isPublic;
     String body;
-    ParseGeoPoint location;
+    LatLng location;
     boolean viewed;
     User to;
     User from;
@@ -35,11 +36,11 @@ import com.parse.ParseGeoPoint;
         this.body = body;
     }
 
-    public ParseGeoPoint getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
-    public void setLocation(ParseGeoPoint location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 
