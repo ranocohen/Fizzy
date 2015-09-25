@@ -3,37 +3,25 @@ package com.kilr.fizzy;
 import android.content.Context;
 import android.hardware.Camera;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
 import com.kilr.fizzy.models.Message;
 import com.kilr.fizzy.sensors.HeadTracker;
 import com.kilr.fizzy.sensors.HeadTransform;
 import com.kilr.fizzy.widget.DirectionalTextViewContainer;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import timber.log.Timber;
 
 public class ARActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -78,22 +66,18 @@ public class ARActivity extends AppCompatActivity implements GoogleApiClient.Con
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.main);
-        preview.addView(mPreview,0);
-
-
+        preview.addView(mPreview, 0);
 
 
     }
 
-    private void initSensors()
-    {
+    private void initSensors() {
         mHeadTracker = HeadTracker.createFromContext(this);
         mHeadTransform = new HeadTransform();
     }
 
 
-    private void startTracking()
-    {
+    private void startTracking() {
         mIsTracking = true;
 
         mTrackingHandler.post(new Runnable() {
@@ -137,7 +121,6 @@ public class ARActivity extends AppCompatActivity implements GoogleApiClient.Con
     }
 
 
-
     @Override
     public void onConnectionSuspended(int i) {
 
@@ -150,26 +133,18 @@ public class ARActivity extends AppCompatActivity implements GoogleApiClient.Con
 
     private void init() {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        List<Message> messages = new ArrayList<>();
+        messages.add(new Message());
+        messages.add(new Message());
 
-        ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
-        query.findInBackground(new FindCallback<Message>() {
-            public void done(List<Message> messages, ParseException e) {
-                if (e == null) {
-                    for (Message msg : messages) {
+        for (Message msg : messages) {
 
-                        mMessages.add(msg);
-                    }
-                    startTracking();
-                    mDirectionalTextViewContainer.updateMessages(mMessages, mLastLocation);
+            mMessages.add(msg);
+        }
+        startTracking();
+        mDirectionalTextViewContainer.updateMessages(mMessages, mLastLocation);
 
-                } else {
-
-                    Timber.d("Error");
-                }
-            }
-        });
     }
-
 
 
     ///Camera starts here
@@ -183,7 +158,9 @@ public class ARActivity extends AppCompatActivity implements GoogleApiClient.Con
         }
     }
 
-    /** A basic Camera preview class */
+    /**
+     * A basic Camera preview class
+     */
     public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
         private SurfaceHolder mHolder;
         private Camera mCamera;
@@ -218,7 +195,7 @@ public class ARActivity extends AppCompatActivity implements GoogleApiClient.Con
             // If your preview can change or rotate, take care of those events here.
             // Make sure to stop the preview before resizing or reformatting it.
 
-            if (mHolder.getSurface() == null){
+            if (mHolder.getSurface() == null) {
                 // preview surface does not exist
                 return;
             }
@@ -226,7 +203,7 @@ public class ARActivity extends AppCompatActivity implements GoogleApiClient.Con
             // stop preview before making changes
             try {
                 mCamera.stopPreview();
-            } catch (Exception e){
+            } catch (Exception e) {
                 // ignore: tried to stop a non-existent preview
             }
 
@@ -238,19 +215,20 @@ public class ARActivity extends AppCompatActivity implements GoogleApiClient.Con
                 mCamera.setPreviewDisplay(mHolder);
                 mCamera.startPreview();
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 Log.d("ar", "Error starting camera preview: " + e.getMessage());
             }
         }
     }
 
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance(){
+    /**
+     * A safe way to get an instance of the Camera object.
+     */
+    public static Camera getCameraInstance() {
         Camera c = null;
         try {
             c = Camera.open(); // attempt to get a Camera instance
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             // Camera is not available (in use or does not exist)
         }
         return c; // returns null if camera is unavailable
