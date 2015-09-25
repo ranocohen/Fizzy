@@ -14,10 +14,9 @@ import android.view.ViewGroup;
 
 import com.kilr.fizzy.MainActivity;
 import com.kilr.fizzy.R;
-import com.kilr.fizzy.messaging.MessageItemTouchHelperCallback;
 import com.kilr.fizzy.messaging.MessagesRecyclerListAdapter;
 import com.kilr.fizzy.models.Message;
-import com.parse.ParseUser;
+import com.kilr.fizzy.models.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +37,7 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
 
     }
 
-    public void setData(ArrayList<Message> messages, HashMap<String, ParseUser> users) {
+    public void setData(ArrayList<Message> messages, HashMap<String, User> users) {
         adapter.setmMessages(messages);
         adapter.setUsers(users);
         adapter.notifyDataSetChanged();
@@ -47,10 +46,10 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_public_messages,container,false);
+        View v = inflater.inflate(R.layout.fragment_public_messages, container, false);
 
 
-        adapter = new MessagesRecyclerListAdapter(getActivity(), ((MainActivity)getActivity()).getmMessages());
+        adapter = new MessagesRecyclerListAdapter(getActivity(), ((MainActivity) getActivity()).getmMessages());
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -63,9 +62,7 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
                 return false;
             }
         });
-      /*  ItemTouchHelper.Callback callback = new MessageItemTouchHelperCallback(adapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);*/
+
         adapter.notifyDataSetChanged();
         return v;
     }
@@ -78,7 +75,6 @@ public class PublicMessagesRecyclerListFragment extends Fragment {
         this.adapter = adapter;
         this.adapter.notifyDataSetChanged();
     }
-
 
 
 }
