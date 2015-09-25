@@ -6,34 +6,32 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.kilr.fizzy.R;
 import com.kilr.fizzy.models.Message;
-import com.parse.ParseUser;
+import com.kilr.fizzy.models.User;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRecyclerListAdapter.MessageViewHolder>
         implements MessageItemTouchHelperAdapter {
 
     private ArrayList<Message> mMessages = new ArrayList();
 
-    public HashMap<String, ParseUser> getUsers() {
+    public HashMap<String, User> getUsers() {
         return users;
     }
 
-    public void setUsers(HashMap<String, ParseUser> users) {
+    public void setUsers(HashMap<String, User> users) {
         this.users = users;
     }
 
-    HashMap<String, ParseUser> users = new HashMap<>();
+    HashMap<String, User> users = new HashMap<>();
 
     private Context mCon;
 
@@ -61,46 +59,20 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
 
     @Override
     public void onBindViewHolder(MessageViewHolder messageViewHolder, int i) {
+        Message msg = mMessages.get(i);
 
-        ParseUser pu = null;
-        try {
-            pu = users.get(mMessages.get(i).getFrom().getObjectId());
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(msg == null)
+        {
+            Timber.e("Null user");
+            return;
         }
 
-        try {
-            if(pu!=null) {
-                if (pu.getString("name") != null)
-                    messageViewHolder.mUserName.setText(pu.getString("name"));
-                else
-                    messageViewHolder.mUserName.setText("anonymous");
+        User from = mMessages.get(i).getFrom();
 
-                if (pu.getString("fbUserId") != null) {
-                    String imgUrl = "https://graph.facebook.com/" + pu.getString("fbUserId") + "/picture?type=small";
-                    Glide.with(mCon).load(imgUrl).into(messageViewHolder.mUserImage);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        try {
-            if(mMessages.get(i).getCreatedAt()!=null) {
-                Date date = mMessages.get(i).getCreatedAt();
-                String time = String.valueOf(date.getHours())+ ":" + String.valueOf(date.getMinutes());
-                messageViewHolder.mTime.setText(time);
-            }else
-                messageViewHolder.mTime.setText("");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        try {
-            messageViewHolder.mMessageText.setText(mMessages.get(i).getBody());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        messageViewHolder.mUserName.setText(from.getUserName());
+        messageViewHolder.mMessageText.setText(mMessages.get(i).getBody());
 
 
     }
