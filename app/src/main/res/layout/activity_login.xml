@@ -32,28 +32,5 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="48dp" />
-<!--
-    <Button
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send msg"
-        android:id="@+id/button"
-        android:layout_gravity="center_horizontal" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Action2"
-        android:id="@+id/button2"
-        android:layout_gravity="center_horizontal" />
-
-
-    <EditText
-        android:hint="@string/enter_body"
-        android:layout_width="362dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:layout_gravity="center_horizontal" />-->
 
 </RelativeLayout>
