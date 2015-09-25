@@ -190,8 +190,8 @@ public class DirectionalTextViewContainer extends FrameLayout
         for(Message msg : messages)
         {
             Location placeLoc = new Location("placeLoc");
-            placeLoc.setLatitude(msg.getLocation().getLatitude());
-            placeLoc.setLongitude(msg.getLocation().getLongitude());
+            placeLoc.setLatitude(msg.getLocation().latitude);
+            placeLoc.setLongitude(msg.getLocation().longitude);
 
 //            Log.d(TAG, "degrees to " + place.getName() + ": " + lastLocation.bearingTo(placeLoc) + " distance: " + lastLocation.distanceTo(placeLoc));
 
