@@ -6,7 +6,6 @@ import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -32,28 +31,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
 import com.kilr.fizzy.models.Message;
-import com.kilr.fizzy.sensors.HeadTracker;
-import com.kilr.fizzy.sensors.HeadTransform;
-import com.parse.FindCallback;
-import com.parse.FunctionCallback;
-import com.parse.ParseCloud;
-import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
+import com.kilr.fizzy.models.User;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import timber.log.Timber;
 
 /**
  * Created by idanakav on 9/3/15.
@@ -121,10 +104,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton mFab;
     private ArrayList<Message> mMessages = new ArrayList();
-    private HashMap<String, ParseUser> mUsers = new HashMap<>();
+    private HashMap<String, User> mUsers = new HashMap<>();
 
     FrameLayout test;
-
 
 
     public ArrayList<Message> getmMessages() {
@@ -203,62 +185,51 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void fetchNearMessages() {
 
-        //ParseGeoPoint userLocation = (ParseGeoPoint) userObject.get("location");
-//        final List<String> ids = new ArrayList<>();
-        //mMessages.get(i).getObjectId();
-
-        ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
-        query.findInBackground(new FindCallback<Message>() {
-            public void done(List<Message> messages, ParseException e) {
-                if (e == null) {
-                    for (Message msg : messages) {
-                        map.addMarker(new MarkerOptions()
-                                .icon(BitmapDescriptorFactory
-                                        .fromResource(R.drawable.ic_chat))
-                                .position(new LatLng(msg.getLocation().getLatitude(), msg.getLocation().getLongitude()))
-                                .title(msg.getBody()));
-                        mMessages.add(msg);
-
-                    }
-
-                    HashSet<String> uniqueIds = new HashSet<String>();
-
-                    for (int i = 0; i < mMessages.size(); i++) {
-                            uniqueIds.add(mMessages.get(i).getFrom().getObjectId());
-                    }
-                    ParseQuery<ParseUser> query = ParseUser.getQuery();
-                    query.whereContainedIn("objectId", Arrays.asList(uniqueIds.toArray(new String[1])));
-                    List<ParseUser> results = null;
-                    try {
-                        results = query.find();
-                        int i=0;
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }finally {
-                        Log.d("fuck", results.toString());
-                        for (int i = 0; i < results.size(); i++) {
-                            mUsers.put(results.get(i).getObjectId(),results.get(i));
-                        }
-                    }
-
-//                    query.findInBackground(new FindCallback<ParseObject>() {
-//                        @Override
-//                        public void done(List<ParseObject> list, ParseException e) {
-//                            Timber.i("you have %d friends!!!", list.size());
+        //// TODO: 9/25/15 add new one
+//        ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
+//        query.findInBackground(new FindCallback<Message>() {
+//            public void done(List<Message> messages, ParseException e) {
+//                if (e == null) {
+//                    for (Message msg : messages) {
+//                        map.addMarker(new MarkerOptions()
+//                                .icon(BitmapDescriptorFactory
+//                                        .fromResource(R.drawable.ic_chat))
+//                                .position(new LatLng(msg.getLocation().getLatitude(), msg.getLocation().getLongitude()))
+//                                .title(msg.getBody()));
+//                        mMessages.add(msg);
+//
+//                    }
+//
+//                    HashSet<String> uniqueIds = new HashSet<String>();
+//
+//                    for (int i = 0; i < mMessages.size(); i++) {
+//                        uniqueIds.add(mMessages.get(i).getFrom().getObjectId());
+//                    }
+//                    ParseQuery<ParseUser> query = ParseUser.getQuery();
+//                    query.whereContainedIn("objectId", Arrays.asList(uniqueIds.toArray(new String[1])));
+//                    List<ParseUser> results = null;
+//                    try {
+//                        results = query.find();
+//                        int i = 0;
+//                    } catch (ParseException e1) {
+//                        e1.printStackTrace();
+//                    } finally {
+//                        Log.d("fuck", results.toString());
+//                        for (int i = 0; i < results.size(); i++) {
+//                            mUsers.put(results.get(i).getObjectId(), results.get(i));
 //                        }
-//                    });
-
-
-//                    //TODO update adapter
-                    PublicMessagesRecyclerListFragment pmrlf = (PublicMessagesRecyclerListFragment) getSupportFragmentManager().findFragmentByTag(MESSAGE_FRAGMENT);
-                    pmrlf.setData(mMessages, mUsers);
-
-                } else {
-
-                    Timber.d("Error");
-                }
-            }
-        });
+//                    }
+//
+////                    //TODO update adapter
+//                    PublicMessagesRecyclerListFragment pmrlf = (PublicMessagesRecyclerListFragment) getSupportFragmentManager().findFragmentByTag(MESSAGE_FRAGMENT);
+//                    pmrlf.setData(mMessages, mUsers);
+//
+//                } else {
+//
+//                    Timber.d("Error");
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -271,12 +242,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onLocationChanged(Location location) {
 
         currentLocation = location;
-        if (lastLocation != null
-                && geoPointFromLocation(location)
-                .distanceInKilometersTo(geoPointFromLocation(lastLocation)) < 0.01) {
-            // If the location hasn't changed by more than 10 meters, ignore it.
-            return;
-        }
+
         lastLocation = location;
         LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         if (!hasSetUpInitialLocation) {
@@ -289,36 +255,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         // Update map radius indicator
         updateCircle(myLatLng);
-        //doMapQuery();
-        //doListQuery();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
         currentLocation = getLocation();
-        ParseGeoPoint parseGeoPoint = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());
-        ParseUser.getCurrentUser().put("last_known_location", parseGeoPoint);
 
         startPeriodicUpdates();
-
-    /*    HashMap<String,Object> map = new HashMap<>();
-        map.put("body", "Hello Kenlkasdj");
-        map.put("location", parseGeoPoint);
-//        ParseCloud.callFunctionInBackground("add_message", map, new FunctionCallback<Object>() {
-//            @Override
-//            public void done(Object o, ParseException e) {
-//                if (e != null) {
-//                    Timber.e(e.getMessage());
-//                } else if (o != null) {
-//                    Timber.i(o.toString());
-//                }
-//
-//                if (o == null) {
-//                    Timber.i("NULL SHIT");
-//                }
-//            }
-        });*/
-
     }
 
     @Override
@@ -344,87 +287,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //showErrorDialog(connectionResult.getErrorCode());
         }
     }
-
-    private ParseGeoPoint geoPointFromLocation(Location loc) {
-        return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
-    }
-
-    /*private void updateZoom(LatLng myLatLng) {
-        // Get the bounds to zoom to
-        LatLngBounds bounds = calculateBoundsWithCenter(myLatLng);
-        // Zoom to the given bounds
-        mapFragment.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 5));
-    }*/
-
-  /*  *//*
- * Helper method to calculate the bounds for map zooming
- *//*
-    LatLngBounds calculateBoundsWithCenter(LatLng myLatLng) {
-        // Create a bounds
-        LatLngBounds.Builder builder = LatLngBounds.builder();
-
-        // Calculate east/west points that should to be included
-        // in the bounds
-        double lngDifference = calculateLatLngOffset(myLatLng, false);
-        LatLng east = new LatLng(myLatLng.latitude, myLatLng.longitude + lngDifference);
-        builder.include(east);
-        LatLng west = new LatLng(myLatLng.latitude, myLatLng.longitude - lngDifference);
-        builder.include(west);
-
-        // Calculate north/south points that should to be included
-        // in the bounds
-        double latDifference = calculateLatLngOffset(myLatLng, true);
-        LatLng north = new LatLng(myLatLng.latitude + latDifference, myLatLng.longitude);
-        builder.include(north);
-        LatLng south = new LatLng(myLatLng.latitude - latDifference, myLatLng.longitude);
-        builder.include(south);
-
-        return builder.build();
-    }
-
-    private double calculateLatLngOffset(LatLng myLatLng, boolean bLatOffset) {
-        // The return offset, initialized to the default difference
-        double latLngOffset = OFFSET_CALCULATION_INIT_DIFF;
-        // Set up the desired offset distance in meters
-        float desiredOffsetInMeters = radius * METERS_PER_FEET;
-        // Variables for the distance calculation
-        float[] distance = new float[1];
-        boolean foundMax = false;
-        double foundMinDiff = 0;
-        // Loop through and get the offset
-        do {
-            // Calculate the distance between the point of interest
-            // and the current offset in the latitude or longitude direction
-            if (bLatOffset) {
-                Location.distanceBetween(myLatLng.latitude, myLatLng.longitude, myLatLng.latitude
-                        + latLngOffset, myLatLng.longitude, distance);
-            } else {
-                Location.distanceBetween(myLatLng.latitude, myLatLng.longitude, myLatLng.latitude,
-                        myLatLng.longitude + latLngOffset, distance);
-            }
-            // Compare the current difference with the desired one
-            float distanceDiff = distance[0] - desiredOffsetInMeters;
-            if (distanceDiff < 0) {
-                // Need to catch up to the desired distance
-                if (!foundMax) {
-                    foundMinDiff = latLngOffset;
-                    // Increase the calculated offset
-                    latLngOffset *= 2;
-                } else {
-                    double tmp = latLngOffset;
-                    // Increase the calculated offset, at a slower pace
-                    latLngOffset += (latLngOffset - foundMinDiff) / 2;
-                    foundMinDiff = tmp;
-                }
-            } else {
-                // Overshot the desired distance
-                // Decrease the calculated offset
-                latLngOffset -= (latLngOffset - foundMinDiff) / 2;
-                foundMax = true;
-            }
-        } while (Math.abs(distance[0] - desiredOffsetInMeters) > OFFSET_CALCULATION_ACCURACY);
-        return latLngOffset;
-    }*/
 
     private void updateCircle(LatLng myLatLng) {
         //TODO update marker
@@ -490,8 +352,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-
-
     }
 
     @Override
@@ -499,9 +359,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -519,7 +376,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this,ARActivity.class));
+            startActivity(new Intent(this, ARActivity.class));
             return true;
         }
 
