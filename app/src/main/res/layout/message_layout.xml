@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="6dp"
+    android:minHeight="80dp"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -26,18 +27,20 @@
             android:id="@+id/message_item_user_name"
             android:gravity="left"
             android:text="test"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/textcolor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_gravity="left" />
-        
+
         <TextView
             android:gravity="center"
-            android:layout_gravity="center_horizontal"
             android:background="@drawable/message_background"
-            android:padding="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"
+            android:padding="8dp"
+            android:textSize="16sp"
             android:text="test"
             android:id="@+id/message_item_message_text"
             android:layout_width="wrap_content"

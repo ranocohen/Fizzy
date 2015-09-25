@@ -14,6 +14,7 @@ import com.kilr.fizzy.R;
 import com.kilr.fizzy.models.Message;
 import com.parse.ParseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -86,9 +87,15 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
         }
 
         try {
+            SimpleDateFormat fmt = new SimpleDateFormat("HH:mm");
+
+
+
+
+
             if(mMessages.get(i).getCreatedAt()!=null) {
                 Date date = mMessages.get(i).getCreatedAt();
-                String time = String.valueOf(date.getHours())+ ":" + String.valueOf(date.getMinutes());
+                String time = String.valueOf(fmt.format(date));
                 messageViewHolder.mTime.setText(time);
             }else
                 messageViewHolder.mTime.setText("");
@@ -130,6 +137,7 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
             mUserImage = (CircleImageView) itemView.findViewById(R.id.message_item_user_image);
             mUserName = (TextView) itemView.findViewById(R.id.message_item_user_name);
             mTime = (TextView) itemView.findViewById(R.id.message_item_time_text);
+
 
         }
 

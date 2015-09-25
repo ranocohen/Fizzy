@@ -177,9 +177,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-        mapView.getMap().animateCamera(zoom);
-
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,8 +280,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Zoom to the current location.
             LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
             LatLngBounds bounds = LatLngBounds.builder().include(latlng).build();
-            mapView.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 16));
-
+            //mapView.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 120));
+            mapView.getMap().moveCamera(CameraUpdateFactory.newLatLng(latlng));
+            mapView.getMap().animateCamera(CameraUpdateFactory.zoomTo(14));
             hasSetUpInitialLocation = true;
         }
         // Update map radius indicator
@@ -490,8 +488,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-
-
     }
 
     @Override
