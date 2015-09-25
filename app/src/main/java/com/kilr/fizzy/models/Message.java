@@ -1,87 +1,72 @@
 package com.kilr.fizzy.models;
 
-import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-import com.parse.ParseRelation;
-import com.parse.ParseUser;
-
-import java.util.Date;
 
 /**
  * Created by idanakav on 9/3/15.
  */
-@ParseClassName("Message")
 
-    public class Message extends ParseObject {
+    public class Message {
 
     public Message() {}
-
 
     boolean isPublic;
     String body;
     ParseGeoPoint location;
     boolean viewed;
-    ParseRelation<ParseUser> to;
-    ParseRelation<ParseUser> from;
+    User to;
+    User from;
     //Date createdAt;
 
+
     public boolean isPublic() {
-        return getBoolean("isPublic");
+        return isPublic;
     }
 
     public void setIsPublic(boolean isPublic) {
-        put("isPublic",isPublic);
+        this.isPublic = isPublic;
     }
 
     public String getBody() {
-        return getString("body");
+        return body;
     }
 
     public void setBody(String body) {
-        put("body",body);
+        this.body = body;
     }
 
     public ParseGeoPoint getLocation() {
-       return getParseGeoPoint("location");
+        return location;
     }
 
     public void setLocation(ParseGeoPoint location) {
-        put("location",location);
+        this.location = location;
     }
 
     public boolean isViewed() {
-       return getBoolean("viewed");
+        return viewed;
     }
 
     public void setViewed(boolean viewed) {
-        put("viewed",viewed);
+        this.viewed = viewed;
     }
 
-    public ParseUser getTo() {
-        return getParseUser("to");
+    public User getTo() {
+        return to;
     }
 
-    public void setTo(ParseRelation<ParseUser> to) {
-        put("to",to);
+    public void setTo(User to) {
+        this.to = to;
     }
 
-    public ParseUser getFrom() {
-        return getParseUser("from");
+    public User getFrom() {
+        return from;
     }
 
-    public void setFrom(ParseRelation<ParseUser> from) {
-        put("from",from);
+    public void setFrom(User from) {
+        this.from = from;
     }
 
-//    @Override
-//    public Date getCreatedAt() {
-//        return createdAt;
-//    }
-//
-//    public void setCreatedAt(Date createdAt) {
-//        this.createdAt = createdAt;
-//    }
 
 
 

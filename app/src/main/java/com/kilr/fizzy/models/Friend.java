@@ -5,7 +5,6 @@ package com.kilr.fizzy.models;
  */
 public class Friend {
 
-    //static String imageUrl "https://graph.facebook.com/\%s/picture?type=large";
     String name;
     String userId;
     String userImageURL;
