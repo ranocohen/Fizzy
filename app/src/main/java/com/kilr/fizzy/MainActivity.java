@@ -6,7 +6,6 @@ import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -32,30 +31,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.kilr.fizzy.fragments.PublicMessagesRecyclerListFragment;
 import com.kilr.fizzy.models.Message;
 import com.kilr.fizzy.models.User;
-import com.kilr.fizzy.sensors.HeadTracker;
-import com.kilr.fizzy.sensors.HeadTransform;
-import com.kilr.fizzy.utils.Utils;
-import com.parse.FindCallback;
-import com.parse.FunctionCallback;
-import com.parse.ParseCloud;
-import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import timber.log.Timber;
 
 /**
  * Created by idanakav on 9/3/15.
