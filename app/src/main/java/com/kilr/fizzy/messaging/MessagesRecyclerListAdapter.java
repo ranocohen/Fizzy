@@ -61,14 +61,12 @@ public class MessagesRecyclerListAdapter extends RecyclerView.Adapter<MessagesRe
     public void onBindViewHolder(MessageViewHolder messageViewHolder, int i) {
         Message msg = mMessages.get(i);
 
-        if(msg == null)
-        {
+        if (msg == null) {
             Timber.e("Null user");
             return;
         }
 
         User from = mMessages.get(i).getFrom();
-
 
 
         messageViewHolder.mUserName.setText(from.getUserName());
